@@ -30,6 +30,7 @@ class Categories
     private $name;
 
     /**
+     * @var \DateTime
      * @ORM\Column(type="datetime")
      */
     private $created_at;
@@ -41,6 +42,7 @@ class Categories
 
     public function __construct()
     {
+        $this->created_at = new \DateTime();
         $this->recipes = new ArrayCollection();
     }
 

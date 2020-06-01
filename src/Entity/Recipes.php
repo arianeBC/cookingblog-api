@@ -61,6 +61,7 @@ class Recipes
     private $slug;
 
     /**
+     * @var \DateTime
      * @ORM\Column(type="datetime")
      */
     private $created_at;
@@ -72,6 +73,7 @@ class Recipes
 
     public function __construct()
     {
+        $this->created_at = new \DateTime();
         $this->comments = new ArrayCollection();
     }
 

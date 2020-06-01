@@ -13,8 +13,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *      itemOperations={"get"},
- *      collectionOperations={"post"},
- *      normalizationContext={"groups"={"read"}},
+ *      collectionOperations={"post", "get"},
+ *      normalizationContext={"groups"={"read"}}
  * )
  * @ORM\Entity(repositoryClass=UsersRepository::class)
  */
@@ -51,7 +51,8 @@ class Users implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $created_at;
 
@@ -63,6 +64,7 @@ class Users implements UserInterface
 
     public function __construct()
     {
+        $this->created_at = new \DateTime();
         $this->comments = new ArrayCollection();
     }
 

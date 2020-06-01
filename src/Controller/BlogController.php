@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Categories;
 use App\Entity\Recipes;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -44,7 +45,7 @@ class BlogController extends AbstractController {
    }
 
    /**
-    * @Route("/{slug}", name="recipe_by_slug")
+    * @Route("/{slug}", name="recipe_by_slug", methods={"GET"}))
     */
    public function postByslug(Recipes $post) 
    {
@@ -60,6 +61,9 @@ class BlogController extends AbstractController {
       $serializer = $this->get("serializer");
 
       $recipes = $serializer->deserialize($request->getContent(), Recipes::class, "json");
+
+      dump("$recipes");
+      die();
 
       $em = $this->getDoctrine()->getManager();
       $em->persist($recipes);

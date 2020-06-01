@@ -44,9 +44,15 @@ class Comments
     private $content;
 
     /**
+     * @var \DateTime
      * @ORM\Column(type="datetime")
      */
     private $published_at;
+
+    public function __construct()
+    {
+        $this->published_at = new \DateTime();
+    }
 
     public function getId(): ?int
     {
