@@ -7,8 +7,12 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+#use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+#use App\Controller\ResetPasswordAction;
 
 /**
  * @ApiResource(
@@ -17,6 +21,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      normalizationContext={"groups"={"read"}}
  * )
  * @ORM\Entity(repositoryClass=UsersRepository::class)
+ * @UniqueEntity(
+ *      "email",
+ *      message="Cette adresse e-mail est déjà enregistrée"
+ * )
+ * @UniqueEntity(
+ *      "username",
+ *      message="Ce nom d'utilisateur est déjà utilisé"
+ * )
  */
 class Users implements UserInterface
 {
@@ -31,24 +43,72 @@ class Users implements UserInterface
     /**
      * @ORM\Column(type="string", length=40)
      * @Groups({"read"})
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
+     * @Assert\Length(
+     *      min=3, 
+     *      max=40,
+     *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères",
+     *      maxMessage = "Ce champ doit comporter un maximum de {{ limit }} caractères"
+     * )
      */
     private $usergroup;
 
     /**
-     * @ORM\Column(type="string", length=60)
+     * @ORM\Column(type="string", length=60, unique=true)
      * @Groups({"read"})
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
+     * @Assert\Length(
+     *      min=3, 
+     *      max=60,
+     *      minMessage = "Votre nom doit comporter au moins {{ limit }} caractères",
+     *      maxMessage = "Votre nom doit comporter un maximum de {{ limit }} caractères"
+     * )
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
+     * @Assert\Email(
+     *      message="Veuillez entrer une adresse e-mail valide"
+     * )
+     * @Assert\Length(
+     *      min=6, 
+     *      max=255,
+     *      minMessage = "Votre email doit comporter au moins {{ limit }} caractères",
+     *      maxMessage = "Votre email doit comporter un maximum de {{ limit }} caractères"
+     * )
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
+     * @Assert\Regex(
+     *      pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}/",
+     *      message="Votre mot de passe doit comporter au moins 8 caractères et contenir une majuscule, une minuscule et un chiffre"
+     * )
      */
     private $password;
+
+    /**
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
+     * @Assert\Expression(
+     *      "this.getPassword() === this.getRetypedPassword()",
+     *      message="Les mots de passes que vous avez saisis ne correspondent pas"
+     * )
+     */
+    private $retypedPassword;
 
     /**
      * @var \DateTime
@@ -177,5 +237,15 @@ class Users implements UserInterface
     public function eraseCredentials()
     {
         
+    }
+
+    public function getRetypedPassword()
+    {
+        return $this->retypedPassword;
+    }
+
+    public function setRetypedPassword($retypedPassword): void
+    {
+        $this->retypedPassword = $retypedPassword;
     }
 }
