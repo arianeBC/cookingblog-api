@@ -68,4 +68,5 @@ class BlogController extends AbstractController {
 
       return $this->json($recipes);
    }
+
 }
