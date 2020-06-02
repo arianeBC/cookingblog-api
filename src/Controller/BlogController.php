@@ -62,9 +62,6 @@ class BlogController extends AbstractController {
 
       $recipes = $serializer->deserialize($request->getContent(), Recipes::class, "json");
 
-      dump("$recipes");
-      die();
-
       $em = $this->getDoctrine()->getManager();
       $em->persist($recipes);
       $em->flush();

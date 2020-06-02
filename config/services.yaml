@@ -11,12 +11,6 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    reporting.reader.serializer:
-        class: Symfony\Component\Serializer\Serializer
-        arguments:
-            - ['@serializer.normalizer.object']
-            - ['@serializer.encoder.csv']
-        autoconfigure: false
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:

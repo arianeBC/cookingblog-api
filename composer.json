@@ -21,7 +21,8 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "fzaninotto/faker": "^1.9",
-        "symfony/maker-bundle": "^1.18"
+        "symfony/maker-bundle": "^1.18",
+        "symfony/var-dumper": "5.0.*"
     },
     "config": {
         "preferred-install": {
