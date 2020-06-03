@@ -11,7 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ApiResource(
  *      itemOperations={"get"},
- *      collectionOperations={"get"}
+ *      collectionOperations={
+ *          "get"
+ *          
+ *      }
  * )
  * @ORM\Entity(repositoryClass=CategoriesRepository::class)
  */

@@ -5,11 +5,22 @@ namespace App\Entity;
 use App\Repository\CommentsRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *      itemOperations={"get"},
- *      collectionOperations={"get"}
+ *      itemOperations={
+ *          "get",
+ *          "put"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getUser() == user"
+ *          }
+ *      },
+ *      collectionOperations={
+ *          "get",
+ *          "post"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *          }
+ *      }
  * )
  * @ORM\Entity(repositoryClass=CommentsRepository::class)
  */
@@ -40,6 +51,13 @@ class Comments
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
+     * @Assert\Length(
+     *      min=1, 
+     *      minMessage = "Votre commentaire doit comporter au moins {{ limit }} caractère"
+     * )
      */
     private $content;
 

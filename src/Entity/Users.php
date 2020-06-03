@@ -16,18 +16,44 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *      itemOperations={"get"},
- *      collectionOperations={"post"},
- *      normalizationContext={"groups"={"read"}}
+ *      itemOperations={
+ *          "get"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              }
+ *          },
+ *          "put"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
+ *              "denormalization_context"={
+ *                  "groups"={"put"}
+ *              },
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              }
+ *          }
+ *      },
+ *      collectionOperations={
+ *          "post"={
+ *              "denormalization_context"={
+ *                  "groups"={"post"}
+ *              },
+ *              "normalization_context"={
+ *                  "groups"={"get"}
+ *              }
+ *          }
+ *      },
  * )
  * @ORM\Entity(repositoryClass=UsersRepository::class)
  * @UniqueEntity(
  *      "email",
- *      message="Cette adresse e-mail est déjà enregistrée"
+ *      message="Cette adresse e-mail est déjà enregistrée",
+ *      groups={"post"}
  * )
  * @UniqueEntity(
  *      "username",
- *      message="Ce nom d'utilisateur est déjà utilisé"
+ *      message="Ce nom d'utilisateur est déjà utilisé",
+ *      groups={"post"}
  * )
  */
 class Users implements UserInterface
@@ -36,13 +62,13 @@ class Users implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"read"})
+     * @Groups({"get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=40)
-     * @Groups({"read"})
+     * @Groups({"get", "post"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
@@ -57,7 +83,7 @@ class Users implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=60, unique=true)
-     * @Groups({"read"})
+     * @Groups({"get", "post", "put"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
@@ -72,6 +98,7 @@ class Users implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Groups({"post", "put"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
@@ -89,17 +116,21 @@ class Users implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"put", "post"})
      * @Assert\NotBlank(
-     *      message="Ce champ est obligatoire"
+     *      message="Ce champ est obligatoire",
+     *      groups={"post"}
      * )
      * @Assert\Regex(
      *      pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}/",
-     *      message="Votre mot de passe doit comporter au moins 8 caractères et contenir une majuscule, une minuscule et un chiffre"
+     *      message="Votre mot de passe doit comporter au moins 8 caractères et contenir une majuscule, une minuscule et un chiffre",
+     *      groups={"post"}
      * )
      */
     private $password;
 
     /**
+     * @Groups({"put", "post"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
@@ -118,7 +149,7 @@ class Users implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="user")
-     * @Groups({"read"})
+     * @Groups({"get"})
      */
     private $comments;
 
@@ -247,5 +278,10 @@ class Users implements UserInterface
     public function setRetypedPassword($retypedPassword): void
     {
         $this->retypedPassword = $retypedPassword;
+    }
+
+    public function __toString(): string
+    {
+        return $this->username;
     }
 }

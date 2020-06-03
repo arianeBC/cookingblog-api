@@ -7,11 +7,22 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *      itemOperations={"get"},
- *      collectionOperations={"get"}
+ *      itemOperations={
+ *          "get",
+ *          "put"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *          }
+ *      },
+ *      collectionOperations={
+ *          "get",
+ *          "post"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *          }
+ *      }
  * )
  * @ORM\Entity(repositoryClass=RecipesRepository::class)
  */
@@ -27,36 +38,74 @@ class Recipes
     /**
      * @ORM\ManyToOne(targetEntity=Categories::class, inversedBy="recipes")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
      */
     private $category;
 
     /**
      * @ORM\Column(type="string", length=60, nullable=true)
+     * @Assert\Length(
+     *      min=3, 
+     *      max=60,
+     *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères",
+     *      maxMessage = "Ce champ doit comporter un maximum de {{ limit }} caractères"
+     * )
      */
     private $theme;
 
     /**
      * @ORM\Column(type="string", length=60)
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
+     * @Assert\Length(
+     *      min=3, 
+     *      max=60,
+     *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères",
+     *      maxMessage = "Ce champ doit comporter un maximum de {{ limit }} caractères"
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
      */
     private $ingredients;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
+     * @Assert\Length(
+     *      min=20, 
+     *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères"
+     * )
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=70)
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
+     * @Assert\Length(
+     *      min=20, 
+     *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères"
+     * )
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
      */
     private $slug;
 

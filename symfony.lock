@@ -360,6 +360,9 @@
     "symfony/polyfill-php73": {
         "version": "v1.17.0"
     },
+    "symfony/polyfill-php80": {
+        "version": "v1.17.0"
+    },
     "symfony/property-access": {
         "version": "v5.0.8"
     },
