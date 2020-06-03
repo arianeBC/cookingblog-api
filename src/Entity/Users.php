@@ -232,9 +232,9 @@ class Users implements UserInterface
         return $this->comments;
     }
 
-    public function getRoles(): array
+    public function getRoles()
     {
-        return $this->roles;
+        return ['ROLE_USER'];
     }
 
     public function setRoles(array $roles)
