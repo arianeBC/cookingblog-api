@@ -232,32 +232,14 @@ class Users implements UserInterface
         return $this->comments;
     }
 
-    public function addComment(Comments $comment): self
+    public function getRoles(): array
     {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setUser($this);
-        }
-
-        return $this;
+        return $this->roles;
     }
 
-    public function removeComment(Comments $comment): self
+    public function setRoles(array $roles)
     {
-        if ($this->comments->contains($comment)) {
-            $this->comments->removeElement($comment);
-            // set the owning side to null (unless already changed)
-            if ($comment->getUser() === $this) {
-                $comment->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getRoles()
-    {
-        return ['ROLE_USER'];
+        $this->roles = $roles;
     }
 
     public function getSalt()
@@ -282,6 +264,6 @@ class Users implements UserInterface
 
     public function __toString(): string
     {
-        return $this->username;
+        return $this->usergroup;
     }
 }

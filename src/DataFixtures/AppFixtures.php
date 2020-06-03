@@ -17,6 +17,33 @@ class AppFixtures extends Fixture
      */
     private $faker;
 
+    private const USERS = [
+        [
+            "usergroup" => "Super Administrator",
+            "username" => "superadmin",
+            "email" => "superadmin@gmail.com",
+            "password" => "Qwerty0000"
+        ],
+        [
+            "usergroup" => "John Doe",
+            "username" => "John_Doe",
+            "email" => "johndoe@gmail.com",
+            "password" => "Qwerty0000"
+        ],
+        [
+            "usergroup" => "Rob Smith",
+            "username" => "Rob_Smith",
+            "email" => "robsmith@gmail.com",
+            "password" => "Qwerty0000"
+        ],
+        [
+            "usergroup" => "Jenny Rowling",
+            "username" => "Jenny_Rowling",
+            "email" => "jennyrowling@gmail.com",
+            "password" => "Qwerty0000"
+        ],
+    ];
+
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
@@ -37,21 +64,23 @@ class AppFixtures extends Fixture
 
     public function loadUsers(ObjectManager $manager)
     {
-        $user = new Users();
-        $user->setUsergroup("Administrator");
-        $user->setUserName("Ariane Desvals");
-        $user->setEmail("desvalsariane@gmail.com");
+        foreach (self::USERS as $userFixture) {
+            $user = new Users();
+            $user->setUsergroup($userFixture['usergroup']);
+            $user->setUserName($userFixture['username']);
+            $user->setEmail($userFixture['email']);
+    
+            $user->setPassword($this->passwordEncoder->encodePassword(
+                $user,
+                $userFixture['password']
+            ));
 
-        $user->setPassword($this->passwordEncoder->encodePassword(
-            $user,
-            "qwerty"
-        ));
+            $user->setCreatedAt(new \DateTime("2020-05-27 18:25:00"));
 
-        $user->setCreatedAt(new \DateTime("2020-05-27 18:25:00"));
+            $this->addReference("user_" . $userFixture['username'], $user);
+            $manager->persist($user);
+        }
 
-        $this->addReference("user_id", $user);
-
-        $manager->persist($user);
         $manager->flush();
     }
 
@@ -88,25 +117,6 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
-
-        // $category = $this->getReference("category_id");
-        // $theme = $this->getReference("theme_id");
-
-        // $recipe = new Recipes();
-        // $recipe->setCategoryId($category);
-        // $recipe->addThemeId($theme);
-        // $recipe->setTags("Légumineuses");
-        // $recipe->setTitle("Cari de lentilles et pommes de terres");
-        // $recipe->setIngredients("1 gros oignon, haché finement - 30 ml (2 c. à soupe) d'huile d'olive - 2 gousses d'ail, hachées finement - 15 ml (1 c. à soupe) de garam masala ou 15 ml (1 c. à soupe) de poudre de cari - 1.125 litre (4 tasses) de bouillon de légumes ou d'eau - 1 litre (4 tasses) de pommes de terre coupées en cubes - 1/2 litre (2 tasses) de carottes coupées en cubes - 375 ml (11/2 tasse) de lentilles vertes sèches, rincées - 1 boîte de 398 ml (14 oz) de tomates en dés - Feuilles de coriandre fraîche au goût (facultatif) - Sel et poivre");
-        // $recipe->setContent("1. Dans une grande casserole, dorer l'oignon dans l'huile. Saler et poivrer. Ajouter l'ail, le garam masala et cuire 1 minute. 2. Ajouter le reste des ingrédients à l'exception de la coriandre et porter à ébullition. Laisser mijoter doucement, à découvert, environ 35 minutes ou jusqu'à ce que les lentilles soient tendres. Rectifier l'assaisonnement. Servir sur du riz basmati et garnir de coriandre.");
-        // $recipe->setRating("5");
-        // $recipe->setImage("Cari-de-lentilles-et-pommes-de-terres.jpg");
-        // $recipe->setSlug("cari-de-lentilles-et-pommes-de-terres");
-        // $recipe->setCreatedAt(new \DateTime("2020-05-27 18:25:00"));
-
-        // $manager->persist($recipe);
-
-        // $manager->flush();
     }
 
     public function loadComments(ObjectManager $manager)
@@ -114,11 +124,14 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 50; $i++) {
             for ($j = 0; $j < rand(1, 10); $j++) {
                 $comment = new Comments();
-                $comment->setUser($this->getReference("user_id"));
-                $comment->setRecipe($this->getReference("recipe_$i"));
                 $comment->setRating("5");
                 $comment->setContent($this->faker->realText());
-                $comment->setPublishedAt($this->faker->DateTimeThisYear);
+                $comment->setPublishedAt($this->faker->dateTimeThisYear);
+
+                $authorReference = $this->getRandomUserReference($comment);
+
+                $comment->setUser($authorReference);
+                $comment->setRecipe($this->getReference("recipe_$i"));
 
                 $manager->persist($comment);
             }
@@ -127,4 +140,8 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
+    protected function getRandomUserReference(): Users
+    {
+        return $this->getReference("user_".self::USERS[rand(0, 3)]['username']);
+    }
 }

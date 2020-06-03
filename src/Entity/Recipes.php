@@ -7,6 +7,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -22,6 +23,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "post"={
  *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
  *          }
+ *      },
+ *      denormalizationContext={
+ *          "groups"={"post"}
  *      }
  * )
  * @ORM\Entity(repositoryClass=RecipesRepository::class)
@@ -41,6 +45,7 @@ class Recipes
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
+     * @Groups({"post"})
      */
     private $category;
 
@@ -52,6 +57,7 @@ class Recipes
      *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères",
      *      maxMessage = "Ce champ doit comporter un maximum de {{ limit }} caractères"
      * )
+     * @Groups({"post"})
      */
     private $theme;
 
@@ -66,6 +72,7 @@ class Recipes
      *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères",
      *      maxMessage = "Ce champ doit comporter un maximum de {{ limit }} caractères"
      * )
+     * @Groups({"post"})
      */
     private $title;
 
@@ -86,6 +93,7 @@ class Recipes
      *      min=20, 
      *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères"
      * )
+     * @Groups({"post"})
      */
     private $content;
 
@@ -106,6 +114,7 @@ class Recipes
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
+     * @Groups({"post"})
      */
     private $slug;
 

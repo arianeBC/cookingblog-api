@@ -5,7 +5,10 @@ namespace App\Entity;
 use App\Repository\CommentsRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\PublishedDateEntityInterface;
 
 /**
  * @ApiResource(
@@ -20,11 +23,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "post"={
  *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
  *          }
+ *      },
+ *      denormalizationContext={
+ *          "groups"={"post"}
  *      }
  * )
  * @ORM\Entity(repositoryClass=CommentsRepository::class)
  */
-class Comments
+class Comments implements AuthoredEntityInterface, PublishedDateEntityInterface
 {
     /**
      * @ORM\Id()
@@ -41,36 +47,35 @@ class Comments
 
     /**
      * @ORM\ManyToOne(targetEntity=Recipes::class, inversedBy="comments")
+     * @Groups({"post"})
      */
     private $recipe;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"post"})
      */
     private $rating;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"post"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
      * @Assert\Length(
      *      min=1, 
-     *      minMessage = "Votre commentaire doit comporter au moins {{ limit }} caractère"
+     *      max=3000,
+     *      minMessage = "Votre commentaire doit comporter au moins {{ limit }} caractère",
+     *      maxMessage = "Votre commentaire doit comporter un maximum de {{ limit }} caractères"
      * )
      */
     private $content;
 
     /**
-     * @var \DateTime
      * @ORM\Column(type="datetime")
      */
     private $published_at;
-
-    public function __construct()
-    {
-        $this->published_at = new \DateTime();
-    }
 
     public function getId(): ?int
     {
@@ -82,7 +87,10 @@ class Comments
         return $this->user;
     }
 
-    public function setUser(?Users $user): self
+    /**
+     * @param UserInterface $user
+     */
+    public function setUser(UserInterface $user): AuthoredEntityInterface
     {
         $this->user = $user;
 
@@ -130,7 +138,7 @@ class Comments
         return $this->published_at;
     }
 
-    public function setPublishedAt(\DateTimeInterface $published_at): self
+    public function setPublishedAt(\DateTimeInterface $published_at): PublishedDateEntityInterface
     {
         $this->published_at = $published_at;
 
