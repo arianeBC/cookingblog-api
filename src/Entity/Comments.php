@@ -21,11 +21,19 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "get",
  *          "post"={
  *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
- *          }
+ *          },
  *      },
  *      denormalizationContext={
  *          "groups"={"post"}
- *      }
+ *      },
+ *     subresourceOperations={
+ *         "api_recipes_comments_get_subresource"={
+ *              "method"="GET",
+ *              "normalization_context"={
+ *                  "groups"={"get-recipes-comments"}
+ *              }
+ *         }
+ *     }
  * )
  * @ORM\Entity(repositoryClass=CommentsRepository::class)
  */
@@ -35,12 +43,14 @@ class Comments implements AuthoredEntityInterface, PublishedDateEntityInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get-recipes-comments"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get-recipes-comments"})
      */
     private $user;
 
@@ -52,13 +62,13 @@ class Comments implements AuthoredEntityInterface, PublishedDateEntityInterface
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups({"post"})
+     * @Groups({"post", "get-recipes-comments"})
      */
     private $rating;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"post"})
+     * @Groups({"post", "get-recipes-comments"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
@@ -73,6 +83,7 @@ class Comments implements AuthoredEntityInterface, PublishedDateEntityInterface
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"get-recipes-comments"})
      */
     private $published_at;
 

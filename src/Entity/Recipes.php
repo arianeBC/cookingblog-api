@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RecipesRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -126,6 +127,7 @@ class Recipes
 
     /**
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="recipe")
+     * @ApiSubresource()
      */
     private $comments;
 

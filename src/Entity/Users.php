@@ -68,7 +68,7 @@ class Users implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=40)
-     * @Groups({"get", "post"})
+     * @Groups({"get", "post", "get-recipes-comments"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
@@ -83,7 +83,7 @@ class Users implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=60, unique=true)
-     * @Groups({"get", "post", "put"})
+     * @Groups({"get", "post", "put", "get-recipes-comments"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
