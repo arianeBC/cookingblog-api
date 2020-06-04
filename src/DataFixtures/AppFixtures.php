@@ -17,30 +17,41 @@ class AppFixtures extends Fixture
      */
     private $faker;
 
-    private const USERS = [
+    private const USER = [
         [
             "usergroup" => "Super Administrator",
             "username" => "superadmin",
             "email" => "superadmin@gmail.com",
-            "password" => "Qwerty0000"
+            "password" => "Qwerty0000",
+            'roles' => [Users::ROLE_SUPERADMIN]
         ],
         [
             "usergroup" => "John Doe",
             "username" => "John_Doe",
             "email" => "johndoe@gmail.com",
-            "password" => "Qwerty0000"
+            "password" => "Qwerty0000",
+            'roles' => [Users::ROLE_ADMIN]
         ],
         [
             "usergroup" => "Rob Smith",
             "username" => "Rob_Smith",
             "email" => "robsmith@gmail.com",
-            "password" => "Qwerty0000"
+            "password" => "Qwerty0000",
+            'roles' => [Users::ROLE_WRITER]
         ],
         [
             "usergroup" => "Jenny Rowling",
             "username" => "Jenny_Rowling",
             "email" => "jennyrowling@gmail.com",
-            "password" => "Qwerty0000"
+            "password" => "Qwerty0000",
+            'roles' => [Users::ROLE_EDITOR]
+        ],
+        [
+            "usergroup" => "Jedi Knight",
+            "username" => "Jedi_Knight",
+            "email" => "jediknight@gmail.com",
+            "password" => "Qwerty0000",
+            'roles' => [Users::ROLE_SUBSCRIBER]
         ],
     ];
 
@@ -64,7 +75,7 @@ class AppFixtures extends Fixture
 
     public function loadUsers(ObjectManager $manager)
     {
-        foreach (self::USERS as $userFixture) {
+        foreach (self::USER as $userFixture) {
             $user = new Users();
             $user->setUsergroup($userFixture['usergroup']);
             $user->setUserName($userFixture['username']);
@@ -74,8 +85,9 @@ class AppFixtures extends Fixture
                 $user,
                 $userFixture['password']
             ));
+            $user->setRoles($userFixture['roles']);
 
-            $user->setCreatedAt(new \DateTime("2020-05-27 18:25:00"));
+            $user->setCreatedAt(new \DateTime());
 
             $this->addReference("user_" . $userFixture['username'], $user);
             $manager->persist($user);
@@ -88,7 +100,7 @@ class AppFixtures extends Fixture
     {
         $category = new Categories();
         $category->setName("Plats");
-        $category->setCreatedAt(new \DateTime("2020-05-27 18:25:00"));
+        $category->setCreatedAt(new \DateTime());
 
         $this->addReference("category_id", $category);
 
@@ -140,8 +152,35 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    protected function getRandomUserReference(): Users
+    protected function getRandomUserReference($entity): Users
     {
-        return $this->getReference("user_".self::USERS[rand(0, 3)]['username']);
+        $randomUser = self::USER[rand(0, 4)];
+
+        if ($entity instanceof Recipes && !count(
+            array_intersect(
+                $randomUser['roles'], 
+                [Users::ROLE_SUPERADMIN, Users::ROLE_ADMIN, Users::ROLE_WRITER]
+            )
+        )) {
+            return $this->getRandomUserReference($entity);
+        }
+
+        if ($entity instanceof Comments && !count(
+            array_intersect(
+                $randomUser['roles'], 
+                [
+                    Users::ROLE_SUPERADMIN, 
+                    Users::ROLE_ADMIN, 
+                    Users::ROLE_WRITER, 
+                    Users::ROLE_SUBSCRIBER
+                ]
+            )
+        )) {
+            return $this->getRandomUserReference($entity);
+        }
+
+        return $this->getReference(
+            "user_".$randomUser['username']
+        );
     }
 }
