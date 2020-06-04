@@ -106,7 +106,7 @@ class Users implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Groups({"post", "put"})
+     * @Groups({"post", "put", "get-admin", "get-owner"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
@@ -163,6 +163,7 @@ class Users implements UserInterface
 
     /**
      * @ORM\Column(type="simple_array", length=200, nullable=false)
+     * @Groups({"get-admin", "get-owner"})
      */
     private $roles;
 
