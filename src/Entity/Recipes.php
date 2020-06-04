@@ -16,13 +16,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      itemOperations={
  *          "get",
  *          "put"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *              "access_control"="is_granted('ROLE_EDITOR') or is_granted('ROLE_WRITER')"
  *          }
  *      },
  *      collectionOperations={
  *          "get",
  *          "post"={
- *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *              "access_control"="is_granted('ROLE_WRITER')"
  *          }
  *      },
  *      denormalizationContext={
@@ -82,6 +82,7 @@ class Recipes
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
+     * @Groups({"post"})
      */
     private $ingredients;
 
@@ -107,6 +108,7 @@ class Recipes
      *      min=20, 
      *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères"
      * )
+     * @Groups({"post"})
      */
     private $image;
 
