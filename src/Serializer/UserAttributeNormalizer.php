@@ -60,7 +60,7 @@ class UserAttributeNormalizer
       if (!$this->serializer instanceof NormalizerInterface) {
          throw new \LogicException(
                sprintf(
-                  "Cannot normalize object '%s' becouse the injected serializer is not a normalizer.",
+                  "Cannot normalize object '%s' because the injected serializer is not a normalizer.",
                   $object
                )
          );

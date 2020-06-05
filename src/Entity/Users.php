@@ -9,10 +9,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
-#use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-#use App\Controller\ResetPasswordAction;
+use App\Controller\ResetPasswordAction;
 
 /**
  * @ApiResource(
@@ -30,6 +30,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              },
  *              "normalization_context"={
  *                  "groups"={"get"}
+ *              }
+ *          },
+ *          "put-reset-password"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
+ *              "method"="PUT",
+ *              "path"="/users/{id}/reset-password",
+ *              "controller"=ResetPasswordAction::class,
+ *              "denormalization_context"={
+ *                  "groups"={"put-reset-password"}
  *              }
  *          }
  *      },
@@ -78,13 +87,15 @@ class Users implements UserInterface
      * @ORM\Column(type="string", length=40)
      * @Groups({"get", "post", "get-recipes-comments"})
      * @Assert\NotBlank(
-     *      message="Ce champ est obligatoire"
+     *      message="Ce champ est obligatoire",
+     *      groups={"post"}
      * )
      * @Assert\Length(
      *      min=3, 
      *      max=40,
      *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères",
-     *      maxMessage = "Ce champ doit comporter un maximum de {{ limit }} caractères"
+     *      maxMessage = "Ce champ doit comporter un maximum de {{ limit }} caractères",
+     *      groups={"post", "put"}
      * )
      */
     private $usergroup;
@@ -93,13 +104,15 @@ class Users implements UserInterface
      * @ORM\Column(type="string", length=60, unique=true)
      * @Groups({"get", "post", "put", "get-recipes-comments"})
      * @Assert\NotBlank(
-     *      message="Ce champ est obligatoire"
+     *      message="Ce champ est obligatoire",
+     *      groups={"post"}
      * )
      * @Assert\Length(
      *      min=3, 
      *      max=60,
      *      minMessage = "Votre nom doit comporter au moins {{ limit }} caractères",
-     *      maxMessage = "Votre nom doit comporter un maximum de {{ limit }} caractères"
+     *      maxMessage = "Votre nom doit comporter un maximum de {{ limit }} caractères",
+     *      groups={"post"}
      * )
      */
     private $username;
@@ -108,23 +121,26 @@ class Users implements UserInterface
      * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"post", "put", "get-admin", "get-owner"})
      * @Assert\NotBlank(
-     *      message="Ce champ est obligatoire"
+     *      message="Ce champ est obligatoire",
+     *      groups={"post"}
      * )
      * @Assert\Email(
-     *      message="Veuillez entrer une adresse e-mail valide"
+     *      message="Veuillez entrer une adresse e-mail valide",
+     *      groups={"post", "put"}
      * )
      * @Assert\Length(
      *      min=6, 
      *      max=255,
      *      minMessage = "Votre email doit comporter au moins {{ limit }} caractères",
-     *      maxMessage = "Votre email doit comporter un maximum de {{ limit }} caractères"
+     *      maxMessage = "Votre email doit comporter un maximum de {{ limit }} caractères",
+     *      groups={"post", "put"}
      * )
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"put", "post"})
+     * @Groups({"post"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire",
      *      groups={"post"}
@@ -138,16 +154,55 @@ class Users implements UserInterface
     private $password;
 
     /**
-     * @Groups({"put", "post"})
+     * @Groups({"post"})
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire",
+     *      groups={"post"}
+     * )
+     * @Assert\Expression(
+     *      "this.getPassword() === this.getRetypedPassword()",
+     *      message="Les mots de passes que vous avez saisis ne correspondent pas",
+     *      groups={"post"}
+     * )
+     */
+    private $retypedPassword;
+
+    /**
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire",
+     *      groups={"post"}
+     * )
+     * @Assert\Regex(
+     *      pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}/",
+     *      message="Votre mot de passe doit comporter au moins 8 caractères et contenir une majuscule, une minuscule et un chiffre",
+     *      groups={"post"}
+     * )
+     */
+    private $newPassword;
+
+    /**
+     * @Groups({"put-reset-password"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
      * @Assert\Expression(
-     *      "this.getPassword() === this.getRetypedPassword()",
+     *      "this.getNewPassword() === this.getNewRetypedPassword()",
      *      message="Les mots de passes que vous avez saisis ne correspondent pas"
      * )
      */
-    private $retypedPassword;
+    private $newRetypedPassword;
+
+    /**
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank(
+     *      message="Ce champ est obligatoire"
+     * )
+     * @UserPassword(
+     *      message="Veuillez saisir votre ancien mot de passe"
+     * )
+     */
+    private $oldPassword;
 
     /**
      * @var \DateTime
@@ -166,6 +221,11 @@ class Users implements UserInterface
      * @Groups({"get-admin", "get-owner"})
      */
     private $roles;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $passwordChangeDate;
 
     public function __construct()
     {
@@ -275,6 +335,46 @@ class Users implements UserInterface
     public function setRetypedPassword($retypedPassword): void
     {
         $this->retypedPassword = $retypedPassword;
+    }
+
+    public function getNewPassword(): ?string
+    {
+        return $this->newPassword;
+    }
+
+    public function setNewPassword($newPassword): void
+    {
+        $this->newPassword = $newPassword;
+    }
+
+    public function getNewRetypedPassword(): ?string
+    {
+        return $this->newRetypedPassword;
+    }
+
+    public function setNewRetypedPassword($newRetypedPassword): void
+    {
+        $this->newRetypedPassword = $newRetypedPassword;
+    }
+
+    public function getOldPassword(): ?string
+    {
+        return $this->oldPassword;
+    }
+
+    public function setOldPassword($oldPassword): void
+    {
+        $this->oldPassword = $oldPassword;
+    }
+
+    public function getPasswordChangeDate()
+    {
+        return $this->passwordChangeDate;
+    }
+
+    public function setPasswordChangeDate($passwordChangeDate): void
+    {
+        $this->passwordChangeDate = $passwordChangeDate;
     }
 
     public function __toString(): string
