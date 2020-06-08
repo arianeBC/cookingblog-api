@@ -171,12 +171,12 @@ class Users implements UserInterface
      * @Groups({"put-reset-password"})
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire",
-     *      groups={"post"}
+     *      groups={"put-reset-password"}
      * )
      * @Assert\Regex(
      *      pattern="/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}/",
      *      message="Votre mot de passe doit comporter au moins 8 caractères et contenir une majuscule, une minuscule et un chiffre",
-     *      groups={"post"}
+     *      groups={"put-reset-password"}
      * )
      */
     private $newPassword;
@@ -184,11 +184,13 @@ class Users implements UserInterface
     /**
      * @Groups({"put-reset-password"})
      * @Assert\NotBlank(
-     *      message="Ce champ est obligatoire"
+     *      message="Ce champ est obligatoire",
+     *      groups={"put-reset-password"}
      * )
      * @Assert\Expression(
      *      "this.getNewPassword() === this.getNewRetypedPassword()",
-     *      message="Les mots de passes que vous avez saisis ne correspondent pas"
+     *      message="Les mots de passes que vous avez saisis ne correspondent pas",
+     *      groups={"put-reset-password"}
      * )
      */
     private $newRetypedPassword;
@@ -196,10 +198,12 @@ class Users implements UserInterface
     /**
      * @Groups({"put-reset-password"})
      * @Assert\NotBlank(
-     *      message="Ce champ est obligatoire"
+     *      message="Ce champ est obligatoire",
+     *      groups={"put-reset-password"}
      * )
      * @UserPassword(
-     *      message="Veuillez saisir votre ancien mot de passe"
+     *      message="Veuillez saisir votre ancien mot de passe",
+     *      groups={"put-reset-password"}
      * )
      */
     private $oldPassword;
