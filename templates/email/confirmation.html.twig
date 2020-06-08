@@ -1,7 +1,7 @@
 <h3>
-   Hello {{ users.getUsername() }}, please confirm you e-mail address,
+   Hello {{ user.getUsername() }}, please confirm you e-mail address,
 </h3>
 
 <p>
-   Please confirm you e-mail address by clicking <a href="{{ url("default_confirm_token", {"token": users.getConfirmationToken()}) }}">this</a> link.
+   Please confirm you e-mail address by clicking <a href="{{ url("default_confirm_token", {"token": user.getConfirmationToken()}) }}">this</a> link.
 </p>
