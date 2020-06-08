@@ -6,6 +6,7 @@ use App\Entity\Users;
 use App\Entity\Categories;
 use App\Entity\Recipes;
 use App\Entity\Comments;
+use App\Security\TokenGenerator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -23,42 +24,51 @@ class AppFixtures extends Fixture
             "username" => "superadmin",
             "email" => "superadmin@gmail.com",
             "password" => "Qwerty0000",
-            'roles' => [Users::ROLE_SUPERADMIN]
+            "roles" => [Users::ROLE_SUPERADMIN],
+            "enabled" => true
         ],
         [
             "usergroup" => "John Doe",
             "username" => "John_Doe",
             "email" => "johndoe@gmail.com",
             "password" => "Qwerty0000",
-            'roles' => [Users::ROLE_ADMIN]
+            "roles" => [Users::ROLE_ADMIN],
+            "enabled" => true
         ],
         [
             "usergroup" => "Rob Smith",
             "username" => "Rob_Smith",
             "email" => "robsmith@gmail.com",
             "password" => "Qwerty0000",
-            'roles' => [Users::ROLE_WRITER]
+            "roles" => [Users::ROLE_WRITER],
+            "enabled" => true
         ],
         [
             "usergroup" => "Jenny Rowling",
             "username" => "Jenny_Rowling",
             "email" => "jennyrowling@gmail.com",
             "password" => "Qwerty0000",
-            'roles' => [Users::ROLE_EDITOR]
+            "roles" => [Users::ROLE_EDITOR],
+            "enabled" => true
         ],
         [
             "usergroup" => "Jedi Knight",
             "username" => "Jedi_Knight",
             "email" => "jediknight@gmail.com",
             "password" => "Qwerty0000",
-            'roles' => [Users::ROLE_SUBSCRIBER]
+            "roles" => [Users::ROLE_SUBSCRIBER],
+            "enabled" => false
         ],
     ];
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(
+        UserPasswordEncoderInterface $passwordEncoder,
+        TokenGenerator $tokenGenerator
+    )
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->faker = \Faker\Factory::create();
+        $this->tokenGenerator = $tokenGenerator;
     }
     
     /**
@@ -88,6 +98,13 @@ class AppFixtures extends Fixture
             $user->setRoles($userFixture['roles']);
 
             $user->setCreatedAt(new \DateTime());
+            $user->setEnabled($userFixture['enabled']);
+
+            if(!$userFixture['enabled']) {
+                $user->setConfirmationToken(
+                    $this->tokenGenerator->getRandomSecureToken()
+                );
+            }
 
             $this->addReference("user_" . $userFixture['username'], $user);
             $manager->persist($user);
