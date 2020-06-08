@@ -35,12 +35,11 @@ class Mailer
          ]
       );
 
-      $message = (new Swift_Message("Please confirm your account!"))
+      $message = (new \Swift_Message("Please confirm your account!"))
          ->setFrom("arianebrosseaucote@gmail.com")
-         // $user->getEmail()
-         ->setTo("arianebrosseaucote@gmail.com")
+         ->setTo($user->getEmail())
          ->setBody($body, "text/html");
 
-      $this->mailer->send($message);
+      $this->mailer->send($message, $errors);
    }
 }
