@@ -13,16 +13,17 @@ class TokenAuthenticator extends JWTTokenAuthenticator
    /**
     * @param PreAuthenticationJWTUserToken $preAuthToken
     * @param UserProviderInterface $userProvider
-    * @param null|\Symfony\Component\Security\Core\User\UserInterface|void
+    * @return null|\Symfony\Component\Security\Core\User\UserInterface|void
     */
    public function getUser($preAuthToken, UserProviderInterface $userProvider)
    {
+      /** @var Users $user */
       $user = parent::getUser(
          $preAuthToken,
          $userProvider
       );
 
-      if ($user->getPasswordChangeDate() && 
+      if ($user->getPasswordChangeDate() &&
          $preAuthToken->getPayload()['iat'] < $user->getPasswordChangeDate()
       ) {
          throw new ExpiredTokenException();
