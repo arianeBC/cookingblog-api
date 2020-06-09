@@ -19,6 +19,48 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
 /**
+ * @ORM\Entity(repositoryClass=RecipesRepository::class)
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "id": "exact",
+ *          "category": "exact",
+ *          "category.name": "partial",
+ *          "theme": "partial",
+ *          "title": "partial",
+ *          "ingredients": "partial",
+ *          "content": "partial"
+ *      }
+ * )
+ * @ApiFilter(
+ *      DateFilter::class,
+ *      properties={
+ *          "created_at"
+ *      }
+ * )
+ * @ApiFilter(
+ *      RangeFilter::class,
+ *      properties={
+ *          "id"
+ *      }
+ * )
+ * @ApiFilter(
+ *      OrderFilter::class,
+ *      properties={
+ *          "id",
+ *          "category",
+ *          "category.name",
+ *          "theme",
+ *          "created_at"
+ *      },
+ *      arguments={"orderParameterName"="_order"}
+ * )
+ * @ApiFilter(PropertyFilter::class, arguments={
+ *     "parameterName": "properties",
+ *     "overrideDefaultProperties": false,
+ *     "whitelist": {"id", "category", "theme", "title", "ingredients", "content", "slug"}
+ * })
+ * 
  * @ApiResource(
  *      attributes={"order"={"created_at": "DESC"}},
  *      itemOperations={
@@ -41,7 +83,6 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  *          "groups"={"post"}
  *      }
  * )
- * @ORM\Entity(repositoryClass=RecipesRepository::class)
  */
 class Recipes 
 {
