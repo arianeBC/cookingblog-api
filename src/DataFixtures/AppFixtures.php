@@ -136,7 +136,6 @@ class AppFixtures extends Fixture
             $recipe->setTitle($this->faker->realText(30));
             $recipe->setIngredients($this->faker->realText(60));
             $recipe->setContent($this->faker->realText);
-            $recipe->setImage($this->faker->text(20));
             $recipe->setSlug($this->faker->slug);
             $recipe->setCreatedAt($this->faker->DateTimeThisYear);
 

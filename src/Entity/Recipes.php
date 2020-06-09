@@ -3,18 +3,29 @@
 namespace App\Entity;
 
 use App\Repository\RecipesRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
 /**
  * @ApiResource(
  *      itemOperations={
- *          "get",
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"get-blog-post"}
+ *              }
+ *          },
  *          "put"={
  *              "access_control"="is_granted('ROLE_EDITOR') or is_granted('ROLE_WRITER')"
  *          }
@@ -37,6 +48,7 @@ class Recipes
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get-blog-post"})
      */
     private $id;
 
@@ -46,7 +58,7 @@ class Recipes
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
-     * @Groups({"post"})
+     * @Groups({"post", "get-blog-post"})
      */
     private $category;
 
@@ -58,7 +70,7 @@ class Recipes
      *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères",
      *      maxMessage = "Ce champ doit comporter un maximum de {{ limit }} caractères"
      * )
-     * @Groups({"post"})
+     * @Groups({"post", "get-blog-post"})
      */
     private $theme;
 
@@ -73,7 +85,7 @@ class Recipes
      *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères",
      *      maxMessage = "Ce champ doit comporter un maximum de {{ limit }} caractères"
      * )
-     * @Groups({"post"})
+     * @Groups({"post", "get-blog-post"})
      */
     private $title;
 
@@ -82,7 +94,7 @@ class Recipes
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
-     * @Groups({"post"})
+     * @Groups({"post", "get-blog-post"})
      */
     private $ingredients;
 
@@ -95,20 +107,15 @@ class Recipes
      *      min=20, 
      *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères"
      * )
-     * @Groups({"post"})
+     * @Groups({"post", "get-blog-post"})
      */
     private $content;
 
     /**
-     * @ORM\Column(type="string", length=70)
-     * @Assert\NotBlank(
-     *      message="Ce champ est obligatoire"
-     * )
-     * @Assert\Length(
-     *      min=20, 
-     *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères"
-     * )
-     * @Groups({"post"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Images")
+     * @ORM\JoinTable()
+     * @ApiSubresource()
+     * @Groups({"post", "get-blog-post"})
      */
     private $image;
 
@@ -117,19 +124,21 @@ class Recipes
      * @Assert\NotBlank(
      *      message="Ce champ est obligatoire"
      * )
-     * @Groups({"post"})
+     * @Groups({"post", "get-blog-post"})
      */
     private $slug;
 
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime")
+     * @Groups({"get-blog-post"})
      */
     private $created_at;
 
     /**
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="recipe")
      * @ApiSubresource()
+     * @Groups({"get-blog-post"})
      */
     private $comments;
 
@@ -137,6 +146,7 @@ class Recipes
     {
         $this->created_at = new \DateTime();
         $this->comments = new ArrayCollection();
+        $this->image = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -204,16 +214,19 @@ class Recipes
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getImage(): Collection
     {
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function addImage(Images $image)
     {
-        $this->image = $image;
+        $this->image->add($image);
+    }
 
-        return $this;
+    public function removeImage(Images $image)
+    {
+        $this->image->removeElement($image);
     }
 
     public function getSlug(): ?string

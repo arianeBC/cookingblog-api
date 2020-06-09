@@ -41,6 +41,7 @@ class Images
 
    /**
     * @ORM\Column(nullable=true)
+    * @Groups({"get-blog-post"})
     */
    private $url;
 
