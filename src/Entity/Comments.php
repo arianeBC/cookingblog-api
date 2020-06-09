@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
+ *      attributes={"order"={"published_at": "DESC"}},
  *      itemOperations={
  *          "get",
  *          "put"={
@@ -20,7 +21,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      collectionOperations={
  *          "get",
  *          "post"={
- *              "access_control"="is_granted('ROLE_SUBSCRIBER')"
+ *              "access_control"="is_granted('ROLE_SUBSCRIBER')",
+ *              "normalization_context"={
+ *                 "groups"={"get-recipes-comments"}
+ *              }
  *          },
  *      },
  *      denormalizationContext={

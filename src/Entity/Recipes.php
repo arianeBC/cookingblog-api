@@ -20,6 +20,7 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
 /**
  * @ApiResource(
+ *      attributes={"order"={"created_at": "DESC"}},
  *      itemOperations={
  *          "get"={
  *              "normalization_context"={
@@ -42,7 +43,7 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  * )
  * @ORM\Entity(repositoryClass=RecipesRepository::class)
  */
-class Recipes
+class Recipes 
 {
     /**
      * @ORM\Id()
