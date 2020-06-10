@@ -1,6 +1,32 @@
 easy_admin:
     entities:
 #        # List the entity class name you want to manage
-        - App\Entity\Recipes
-        - App\Entity\Categories
-        - App\Entity\Users
+        Recipes:
+            class: App\Entity\Recipes
+            list:
+                actions: [ { name: 'Show' } ]
+            show:
+                fields:
+                    - id
+                    - theme
+                    - category
+                    - title
+                    - image
+                    - created_at
+                    - { property: 'comments', template: '\easy_admin\recipes\comments.html.twig' }
+        Categories:
+            class: App\Entity\Categories
+        Users:
+            class: App\Entity\Users
+            controller: App\Controller\UserAdminController
+        Comments:
+            class: App\Entity\Comments
+        Images:
+            class: App\Entity\Images
+            list:
+                fields:
+                    - id
+                    - { property: 'url', type: 'image', label: 'Image' }
+            form:
+                fields:
+                    - { property: 'file', type: 'Vich\UploaderBundle\Form\Type\VichFileType' }

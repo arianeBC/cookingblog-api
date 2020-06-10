@@ -395,11 +395,6 @@ class Users implements UserInterface
         $this->passwordChangeDate = $passwordChangeDate;
     }
 
-    public function __toString(): string
-    {
-        return $this->usergroup;
-    }
-
     public function getEnabled()
     {
         return $this->enabled;
@@ -418,5 +413,10 @@ class Users implements UserInterface
     public function setConfirmationToken($confirmationToken): void
     {
         $this->confirmationToken = $confirmationToken;
+    }
+
+    public function __toString(): string
+    {
+        return $this->usergroup;
     }
 }

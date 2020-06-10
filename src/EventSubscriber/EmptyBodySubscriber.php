@@ -25,7 +25,7 @@ class EmptyBodySubscriber implements EventSubscriberInterface
    {
       $request = $event->getRequest();
       $method = $request->getMethod();
-      $route = $request->get('_route');
+      $route = $request->get("_route");
 
       if (!in_array($method, [Request::METHOD_POST, Request::METHOD_PUT]) ||
          in_array($request->getContentType(), ['html', 'form']) ||

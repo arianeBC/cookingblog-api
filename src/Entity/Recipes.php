@@ -178,7 +178,7 @@ class Recipes
     private $created_at;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="recipe")
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="recipe", cascade={"remove"})
      * @ApiSubresource()
      * @Groups({"get-blog-post"})
      */

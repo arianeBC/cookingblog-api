@@ -165,6 +165,6 @@ class Comments implements AuthoredEntityInterface, PublishedDateEntityInterface
 
     public function __toString(): string
     {
-        return $this->content;
+        return substr($this->content, 0, 20) . "...";
     }
 }
