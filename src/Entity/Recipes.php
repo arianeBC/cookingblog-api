@@ -62,7 +62,7 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  * })
  * 
  * @ApiResource(
- *      attributes={"order"={"created_at": "DESC"}},
+ *      attributes={"order"={"created_at": "DESC"}, "maximum_items_per_page"=30},
  *      itemOperations={
  *          "get"={
  *              "normalization_context"={
