@@ -5,6 +5,8 @@ api_platform:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
+    eager_loading:
+        enabled: true
     collection:
         pagination:
 #            enable: false
@@ -18,6 +20,6 @@ api_platform:
             partial: false
             client_partial: true
             partial_parameter_name: 'partial'
-#        exception_to_status:
-#            App\Exception\EmptyBodyException: 400
-#            App\Exception\InvalidConfirmationTokenException: 404
+    exception_to_status:
+        App\Exception\EmptyBodyException: 400
+        App\Exception\InvalidConfirmationTokenException: 404
