@@ -16,6 +16,15 @@
             "src/Entity/.gitignore"
         ]
     },
+    "behat/behat": {
+        "version": "v3.7.0"
+    },
+    "behat/gherkin": {
+        "version": "v4.6.2"
+    },
+    "behat/transliterator": {
+        "version": "v1.3.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -128,6 +137,30 @@
     },
     "fig/link-util": {
         "version": "1.1.1"
+    },
+    "friends-of-behat/mink": {
+        "version": "v1.8.0"
+    },
+    "friends-of-behat/mink-browserkit-driver": {
+        "version": "v1.4.0"
+    },
+    "friends-of-behat/mink-extension": {
+        "version": "v2.4.0"
+    },
+    "friends-of-behat/symfony-extension": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "3d21344765fd3440a85bdd27d4cada186ec628bd"
+        },
+        "files": [
+            "behat.yml.dist",
+            "config/services_test.yaml",
+            "features/demo.feature",
+            "tests/Behat/DemoContext.php"
+        ]
     },
     "fzaninotto/faker": {
         "version": "v1.9.1"
@@ -246,6 +279,9 @@
     "symfony/asset": {
         "version": "v5.0.8"
     },
+    "symfony/browser-kit": {
+        "version": "v5.0.10"
+    },
     "symfony/cache": {
         "version": "v5.0.8"
     },
@@ -268,6 +304,9 @@
             "config/bootstrap.php"
         ]
     },
+    "symfony/css-selector": {
+        "version": "v5.0.10"
+    },
     "symfony/dependency-injection": {
         "version": "v5.0.8"
     },
@@ -276,6 +315,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v5.0.8"
+    },
+    "symfony/dom-crawler": {
+        "version": "v5.0.10"
     },
     "symfony/dotenv": {
         "version": "v5.0.8"
@@ -422,6 +464,9 @@
     },
     "symfony/property-info": {
         "version": "v5.0.8"
+    },
+    "symfony/proxy-manager-bridge": {
+        "version": "v5.0.10"
     },
     "symfony/routing": {
         "version": "4.2",
