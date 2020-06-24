@@ -59,12 +59,12 @@ use App\Controller\ResetPasswordAction;
  * @UniqueEntity(
  *      "email",
  *      message="Cette adresse e-mail est déjà enregistrée",
- *      groups={"post"}
+ *      groups={"post", "put"}
  * )
  * @UniqueEntity(
  *      "username",
  *      message="Ce nom d'utilisateur est déjà utilisé",
- *      groups={"post"}
+ *      groups={"post", "put"}
  * )
  */
 class Users implements UserInterface
@@ -93,10 +93,10 @@ class Users implements UserInterface
      *      groups={"post"}
      * )
      * @Assert\Length(
-     *      min=3, 
+     *      min=6, 
      *      max=40,
-     *      minMessage = "Ce champ doit comporter au moins {{ limit }} caractères",
-     *      maxMessage = "Ce champ doit comporter un maximum de {{ limit }} caractères",
+     *      minMessage = "Votre nom et prénom doit comporter au moins {{ limit }} caractères",
+     *      maxMessage = "Votre nom et prénom doit comporter un maximum de {{ limit }} caractères",
      *      groups={"post", "put"}
      * )
      */
@@ -112,8 +112,8 @@ class Users implements UserInterface
      * @Assert\Length(
      *      min=3, 
      *      max=60,
-     *      minMessage = "Votre nom doit comporter au moins {{ limit }} caractères",
-     *      maxMessage = "Votre nom doit comporter un maximum de {{ limit }} caractères",
+     *      minMessage = "Votre nom d'utilisateur doit comporter au moins {{ limit }} caractères",
+     *      maxMessage = "Votre nom d'utilisateur doit comporter un maximum de {{ limit }} caractères",
      *      groups={"post"}
      * )
      */
