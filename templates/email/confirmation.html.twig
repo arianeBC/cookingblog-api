@@ -1,7 +1,9 @@
 <h3>
-   Hello {{ user.getUsername() }}, please confirm you e-mail address,
+   Bonjour {{ user.getUsername() }}, <br/> 
+   Merci de vous être inscrit à cuisine SG ! <br/>
 </h3>
 
 <p>
-   Please confirm you e-mail address by clicking <a href="{{ url("default_confirm_token", {"token": user.getConfirmationToken()}) }}">this</a> link.
+   <a href="{{ url("default_confirm_token", {"token": user.getConfirmationToken()}) }}">Confirmez votre adresse email en cliquant sur ce lien</a>
+   ou copiez ce code à l'intérieur du formulaire : <b>{{ user.getConfirmationToken() }} </b>
 </p>

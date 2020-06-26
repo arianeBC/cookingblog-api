@@ -35,7 +35,7 @@ class Mailer
          ]
       );
 
-      $message = (new \Swift_Message("Please confirm your account!"))
+      $message = (new \Swift_Message("Confirmez votre email"))
          ->setFrom("arianebrosseaucote@gmail.com")
          ->setTo($user->getEmail())
          ->setBody($body, "text/html");

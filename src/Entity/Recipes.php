@@ -96,10 +96,7 @@ class Recipes
 
     /**
      * @ORM\ManyToOne(targetEntity=Categories::class, inversedBy="recipes")
-     * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank(
-     *      message="Ce champ est obligatoire"
-     * )
+     * @ORM\JoinColumn(nullable=true)
      * @Groups({"post", "get-blog-post"})
      */
     private $category;
