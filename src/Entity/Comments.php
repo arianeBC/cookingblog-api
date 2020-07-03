@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource(
@@ -26,26 +28,28 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "get",
  *          "post"={
  *              "access_control"="is_granted('ROLE_SUBSCRIBER')",
- *              "normalization_context"={
- *                 "groups"={"get-recipes-comments"}
- *              }
+ *              "normalization_context"={"groups"={"get-recipes-comments"}}
  *          },
+ *      },
+ *      subresourceOperations={
+ *         "api_recipes_comments_get_subresource"={
+ *              "method"="GET",
+ *              "normalization_context"={"groups"={"get-recipes-comments"}}
+ *         },
  *      },
  *      denormalizationContext={
  *          "groups"={"post"}
- *      },
- *     subresourceOperations={
- *         "api_recipes_comments_get_subresource"={
- *              "method"="GET",
- *              "normalization_context"={
- *                  "groups"={"get-recipes-comments"}
- *              }
- *         }
- *     }
+ *      }
+ * )
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "recipe": "exact"
+ *      }
  * )
  * @ORM\Entity(repositoryClass=CommentsRepository::class)
  */
-class Comments implements AuthoredEntityInterface, PublishedDateEntityInterface
+class Comments implements AuthoredEntityInterface
 {
     /**
      * @ORM\Id()
@@ -90,10 +94,16 @@ class Comments implements AuthoredEntityInterface, PublishedDateEntityInterface
     private $content;
 
     /**
+     * @var \DateTime
      * @ORM\Column(type="datetime")
      * @Groups({"get-recipes-comments"})
      */
     private $published_at;
+
+    public function __construct()
+    {
+        $this->published_at = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -156,7 +166,7 @@ class Comments implements AuthoredEntityInterface, PublishedDateEntityInterface
         return $this->published_at;
     }
 
-    public function setPublishedAt(\DateTimeInterface $published_at): PublishedDateEntityInterface
+    public function setPublishedAt(\DateTimeInterface $published_at): self
     {
         $this->published_at = $published_at;
 

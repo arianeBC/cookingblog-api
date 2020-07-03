@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+// namespace App\Entity;
 
-interface PublishedDateEntityInterface
-{
-   public function setPublishedAt(\DateTimeInterface $published_at): PublishedDateEntityInterface;
-}
+// interface PublishedDateEntityInterface
+// {
+//    public function setPublishedAt(\DateTimeInterface $published_at): PublishedDateEntityInterface;
+// }

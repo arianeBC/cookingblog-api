@@ -1,9 +1,11 @@
 <h3>
    Bonjour {{ user.getUsername() }}, <br/> 
-   Merci de vous être inscrit à cuisine SG ! <br/>
+   Veuillez confirmer votre adresse email.<br/>
 </h3>
 
+<p>En confirmant votre adresse email vous activerez votre compte chez CUISINE Sans Gluten.
+Cela vous donnera accès à l'ensemble des fonctionnalités de CUISINE Sans Gluten, comme vous permettre d'ajouter des commentaires sous les recettes ! </p><br/>
 <p>
    <a href="{{ url("default_confirm_token", {"token": user.getConfirmationToken()}) }}">Confirmez votre adresse email en cliquant sur ce lien</a>
-   ou copiez ce code à l'intérieur du formulaire : <b>{{ user.getConfirmationToken() }} </b>
+   ou copiez ce code à l'intérieur du formulaire : <b> {{ user.getConfirmationToken() }} </b>
 </p>

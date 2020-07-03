@@ -35,7 +35,7 @@ class Mailer
          ]
       );
 
-      $message = (new \Swift_Message("Confirmez votre email"))
+      $message = (new \Swift_Message("Activez votre compte"))
          ->setFrom("arianebrosseaucote@gmail.com")
          ->setTo($user->getEmail())
          ->setBody($body, "text/html");
