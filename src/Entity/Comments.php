@@ -44,7 +44,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * @ApiFilter(
  *      SearchFilter::class,
  *      properties={
- *          "recipe": "exact"
+ *          "recipe.id": "exact"
  *      }
  * )
  * @ORM\Entity(repositoryClass=CommentsRepository::class)

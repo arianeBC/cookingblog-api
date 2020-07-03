@@ -153,8 +153,8 @@ class Recipes
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Images")
      * @ORM\JoinTable()
-     * @ApiSubresource()
-     * @Groups({"post", "get-blog-post"})
+
+     * @Groups({"post", "get-blog-post", "image_listing:item:get"})
      */
     private $image;
 
