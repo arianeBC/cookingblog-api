@@ -96,21 +96,21 @@ class Comments implements AuthoredEntityInterface
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime")
-     * @Groups({"get-recipes-comments"})
+     * @Groups({"get-recipes-comments", "post"})
      */
     private $published_at;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime")
-     * @Groups({"get-recipes-comments"})
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"get-recipes-comments", "post"})
      */
     private $published;
 
     public function __construct()
     {
         $this->published_at = new \DateTime();
-        $this->published = new \DateTime();
+        // $this->published = new \DateTime();
     }
 
     public function getId(): ?int
