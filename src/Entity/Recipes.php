@@ -151,6 +151,15 @@ class Recipes
     private $content;
 
     /**
+    * @ORM\Column(type="string", length=30)
+    * @Assert\NotBlank(
+    * message="Ce champ est obligatoire"
+    * )
+    * @Groups({"post", "get-blog-post"})
+    */
+    private $time;
+
+    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Images")
      * @ORM\JoinTable()
      * @ApiSubresource()
@@ -251,6 +260,18 @@ class Recipes
         $this->content = $content;
 
         return $this;
+    }
+
+    public function getTime(): ?string
+    {
+    return $this->time;
+    }
+
+    public function setTime(string $time): self
+    {
+    $this->time = $time;
+
+    return $this;
     }
 
     public function getImage(): Collection

@@ -100,9 +100,17 @@ class Comments implements AuthoredEntityInterface
      */
     private $published_at;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime")
+     * @Groups({"get-recipes-comments"})
+     */
+    private $published;
+
     public function __construct()
     {
         $this->published_at = new \DateTime();
+        $this->published = new \DateTime();
     }
 
     public function getId(): ?int
@@ -169,6 +177,18 @@ class Comments implements AuthoredEntityInterface
     public function setPublishedAt(\DateTimeInterface $published_at): self
     {
         $this->published_at = $published_at;
+
+        return $this;
+    }
+
+    public function getPublished(): ?\DateTimeInterface
+    {
+        return $this->published;
+    }
+
+    public function setPublished(\DateTimeInterface $published): self
+    {
+        $this->published = $published;
 
         return $this;
     }
