@@ -22,7 +22,7 @@ final class Version20200706011358 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE comments DROP published_at');
+        // $this->addSql('ALTER TABLE comments DROP published_at');
     }
 
     public function down(Schema $schema) : void
