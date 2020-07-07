@@ -27,9 +27,7 @@ use App\Controller\UploadImageAction;
  *        }
  *    },
  *    itemOperations={
- *       "get"={
- *          "normalization_context"={"groups"={"image_listing:item:get"}},
- *       },
+ *       "get",
  *       "delete"={
  *          "access_control"="is_granted('ROLE_WRITER')"
  *       }
@@ -42,7 +40,7 @@ class Images
     * @ORM\Id()
     * @ORM\GeneratedValue()
     * @ORM\Column(type="integer")
-    * @Groups({"image_listing:item:get", "get-recipes-images"})
+    * @Groups({"get-recipes-images"})
     */
    private $id;
 
@@ -54,7 +52,7 @@ class Images
 
    /**
     * @ORM\Column(nullable=true)
-    * @Groups({"image_listing:item:get", "get-recipes-images"})
+    * @Groups({"get-recipes-images"})
     */
    private $url;
 
