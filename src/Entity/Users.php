@@ -41,6 +41,9 @@ use App\Controller\ResetPasswordAction;
  *                  "groups"={"put-reset-password"}
  *              },
  *              "validation_groups"={"put-reset-password"}
+ *          },
+ *          "delete"={
+ *              "access_control"="is_granted('ROLE_SUPERADMIN')"
  *          }
  *      },
  *      collectionOperations={
@@ -217,7 +220,7 @@ class Users implements UserInterface
     private $created_at;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="user", cascade={"persist", "remove"})
      * @Groups({"get"})
      */
     private $comments;

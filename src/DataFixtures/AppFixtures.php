@@ -20,10 +20,11 @@ class AppFixtures extends Fixture
 
     private const USER = [
         [
-            "usergroup" => "Super Administrator",
+            "usergroup" => "Super Admin",
             "username" => "superadmin",
-            "email" => "superadmin@gmail.com",
+            "email" => "arianebrosseaucote@gmail.com",
             "password" => "Qwerty0000",
+            "retypedPassword" => "Qwerty0000",
             "roles" => [Users::ROLE_SUPERADMIN],
             "enabled" => true
         ],
@@ -32,6 +33,7 @@ class AppFixtures extends Fixture
             "username" => "John_Doe",
             "email" => "johndoe@gmail.com",
             "password" => "Qwerty0000",
+            "retypedPassword" => "Qwerty0000",
             "roles" => [Users::ROLE_ADMIN],
             "enabled" => true
         ],
@@ -40,6 +42,7 @@ class AppFixtures extends Fixture
             "username" => "Rob_Smith",
             "email" => "robsmith@gmail.com",
             "password" => "Qwerty0000",
+            "retypedPassword" => "Qwerty0000",
             "roles" => [Users::ROLE_WRITER],
             "enabled" => true
         ],
@@ -48,6 +51,7 @@ class AppFixtures extends Fixture
             "username" => "Jenny_Rowling",
             "email" => "jennyrowling@gmail.com",
             "password" => "Qwerty0000",
+            "retypedPassword" => "Qwerty0000",
             "roles" => [Users::ROLE_EDITOR],
             "enabled" => true
         ],
@@ -56,8 +60,9 @@ class AppFixtures extends Fixture
             "username" => "Jedi_Knight",
             "email" => "jediknight@gmail.com",
             "password" => "Qwerty0000",
+            "retypedPassword" => "Qwerty0000",
             "roles" => [Users::ROLE_SUBSCRIBER],
-            "enabled" => false
+            "enabled" => true
         ],
     ];
 
