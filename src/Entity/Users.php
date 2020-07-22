@@ -227,7 +227,7 @@ class Users implements UserInterface
 
     /**
      * @ORM\Column(type="simple_array", length=200, nullable=false)
-     * @Groups({"get-admin", "get-owner"})
+     * @Groups({"get-admin", "get-owner", "post"})
      */
     private $roles;
 

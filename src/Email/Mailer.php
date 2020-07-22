@@ -36,8 +36,7 @@ class Mailer
       );
 
       $message = (new \Swift_Message("Activez votre compte"))
-         // ->setFrom("arianebrosseaucote@gmail.com")
-         ->setFrom("admin@arianedes.com")
+         ->setFrom("admin@arianedes.com", "CUISINE Sans Gluten")
          ->setTo($user->getEmail())
          ->setBody($body, "text/html");
 

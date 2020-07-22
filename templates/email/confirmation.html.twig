@@ -6,6 +6,6 @@
 <p>En confirmant votre adresse email vous activerez votre compte chez CUISINE Sans Gluten.
 Cela vous donnera accès à l'ensemble des fonctionnalités de CUISINE Sans Gluten, comme vous permettre d'ajouter des commentaires sous les recettes ! </p><br/>
 <p>
-   <a href="{{ url("default_confirm_token", {"token": user.getConfirmationToken()}) }}">Confirmez votre adresse email en cliquant sur ce lien</a>
+   Confirmez votre adresse email en cliquant sur ce <a href="{{ url("default_confirm_token", {"token": user.getConfirmationToken()}) }}">lien</a>
    ou copiez ce code à l'intérieur du formulaire : <b> {{ user.getConfirmationToken() }} </b>
 </p>
