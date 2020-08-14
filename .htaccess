@@ -1,9 +1,9 @@
 RewriteEngine on
 RewriteBase /
 
-# RewriteCond %{HTTP_HOST} ^arianedes.com [NC]
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L]
+RewriteCond %{HTTP_HOST} ^arianedes.com [NC]
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L]
 
 RewriteCond %{REQUEST_URI} !^/public/
 RewriteRule ^(.*)$ /public/$1 [L]
