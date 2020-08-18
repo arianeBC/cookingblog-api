@@ -3,12 +3,20 @@
       <head>
          <meta charset="UTF-8">
          <title>{% block title %}Activation du compte{% endblock %}</title>
-         {% block stylesheets %}{% endblock %}
+
+         {% block stylesheets %}
+         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap">
+         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abhaya+Libre&display=swap">
+         {% endblock %}
+
       </head>
-      <body>
-         {% block body %}{% endblock %}
-         Votre compte est activé.
+      <body style="font-family: Work Sans">
+
+         {% block body %}
+         <h3 style="font-family: Abhaya Libre; font-size: 2rem">Votre compte est activé.</h3>
          Merci d’avoir confirmé votre email.
-         {% block javascripts %}{% endblock %}
+         <a href="https://arianedes.com/login"> → Continuer</a>
+         {% endblock %}
+
       </body>
 </html>
